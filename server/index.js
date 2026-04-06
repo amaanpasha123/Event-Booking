@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 // ✅ Middlewares
 app.use(cors({
-    origin: "https://your-vercel-app.vercel.app", // allow all (safe for now, later restrict to your frontend URL)
+    origin: "https://event-booking-git-main-amaanpasha23-9913s-projects.vercel.app", // allow all (safe for now, later restrict to your frontend URL)
     credentials: true,
 }));
 
