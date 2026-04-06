@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 // ✅ Middlewares
 app.use(cors({
-    origin: "*", // allow all (safe for now, later restrict to your frontend URL)
+    origin: "https://your-vercel-app.vercel.app", // allow all (safe for now, later restrict to your frontend URL)
     credentials: true,
 }));
 
