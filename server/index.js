@@ -13,9 +13,10 @@ const PORT = process.env.PORT || 3000;
 
 // ✅ Middlewares
 app.use(cors({
-    origin: 'http://localhost:5173', // ← your Vite frontend port
+    origin: "*", // allow all (safe for now, later restrict to your frontend URL)
     credentials: true,
 }));
+
 app.use(express.json());
 
 // ✅ Routes
