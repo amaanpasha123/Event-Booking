@@ -101,7 +101,7 @@ exports.registerUser = async (req, res) => {
                 });
 
                 const emailSent = await sendOtpEmail(email, otp, "account_verification");
-
+                
                 if (!emailSent) {
                     await OTP.deleteMany({ email, action: "account_verification" });
                     return res.status(500).json({ message: "Failed to send OTP email. Please try again." });
