@@ -13,10 +13,15 @@ const PORT = process.env.PORT || 3000;
 
 // ✅ Middlewares
 app.use(cors({
-    origin: "https://event-booking-git-main-amaanpasha23-9913s-projects.vercel.app", // allow all (safe for now, later restrict to your frontend URL)
+    origin: [
+        "https://event-booking-git-main-amaanpasha23-9913s-projects.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:3000"
+    ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
 app.use(express.json());
 
 // ✅ Routes
