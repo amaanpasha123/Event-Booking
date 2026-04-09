@@ -3,26 +3,23 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-// ✅ Create transporter
-// ✅ Replace with this
+// ✅ Create transporter (BEST for Gmail)
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    service: "gmail",
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    },
+    }
 });
 
 // ✅ Reusable Email Sender Function
 const sendEmail = async (mailOptions) => {
     try {
-        await transporter.sendMail(mailOptions);
-        console.log(`Email sent to ${mailOptions.to}`);
+        const info = await transporter.sendMail(mailOptions);
+        console.log("✅ Email sent:", info.response);
         return true;
     } catch (error) {
-        console.error("Error sending email:", error.message);
+        console.error("❌ FULL EMAIL ERROR:", error); // VERY IMPORTANT
         return false;
     }
 };
@@ -31,11 +28,11 @@ const sendEmail = async (mailOptions) => {
 exports.sendOtpEmail = async (email, otp, type) => {
     const subject =
         type === "account_verification"
-            ? "Verify yours Event account"
+            ? "Verify your Eventora account"
             : "OTP Verification";
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `"Eventora" <${process.env.EMAIL_USER}>`, // ✅ FIXED
         to: email,
         subject,
         text: `Your OTP is ${otp}`,
@@ -59,7 +56,7 @@ exports.sendOtpEmail = async (email, otp, type) => {
 // ✅ Booking Confirmation Email
 exports.sendBookingEmail = async (userEmail, userName, eventTitle) => {
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `"Eventora" <${process.env.EMAIL_USER}>`, // ✅ FIXED
         to: userEmail,
         subject: `🎉 Booking Confirmed: ${eventTitle}`,
         html: `
