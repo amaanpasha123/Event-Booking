@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({
     origin: function (origin, callback) {
         const allowedOrigins = [
-            "https://event-booking-git-main-amaanpasha23-9913s-projects.vercel.app",
+            "https://amaanbook.shop",
         ];
 
         if (!origin || allowedOrigins.includes(origin)) {
