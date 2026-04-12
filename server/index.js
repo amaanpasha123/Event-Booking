@@ -16,6 +16,7 @@ app.use(cors({
     origin: function (origin, callback) {
         const allowedOrigins = [
             "https://amaanbook.shop",
+            "https://www.amaanbook.shop"
         ];
 
         if (!origin || allowedOrigins.includes(origin)) {
