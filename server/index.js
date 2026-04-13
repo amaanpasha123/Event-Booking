@@ -16,7 +16,8 @@ app.use(cors({
     origin: function (origin, callback) {
         const allowedOrigins = [
             "https://amaanbook.shop",
-            "https://www.amaanbook.shop"
+            "https://www.amaanbook.shop",
+            "https://event-booking-jpgt310ml-amaanpasha23-9913s-projects.vercel.app"
         ];
 
         if (!origin || allowedOrigins.includes(origin)) {
