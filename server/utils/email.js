@@ -9,7 +9,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendEmail = async ({ to, subject, html }) => {
     try {
         const response = await resend.emails.send({
-            from: "Eventora <onboarding@resend.dev>", // default working sender
+            from: "Eventora <no-reply@amaanbook.shop>", // ✅ FIXED
             to,
             subject,
             html,
