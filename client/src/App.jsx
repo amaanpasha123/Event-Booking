@@ -10,6 +10,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentFailed from './pages/PaymentFailed';
 import OrganizerRegister from './pages/OrganizerRegister';
+import OrganizerDashboard from './pages/OrganizerDashboard';
 
 function App() {
   return (
