@@ -10,20 +10,22 @@ const userSchema = new mongoose.Schema({
         type : String,
         required : true,
         unique : true,
+        lowercase : true
     },
     password : {
         type : String,
         required : true,
+        minlength : 6
     },
     role : {
         type : String,
-        enum : ['user', 'admin'],
+        enum : ['user','organizer', 'admin'],
         default : 'user'
     },
     isVerified : {
         type : Boolean,
         default : false
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

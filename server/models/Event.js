@@ -30,6 +30,10 @@ const eventData = new mongoose.Schema({
     availableSeats : {
         type : Number,
         required : true,
+        min:0,
+        default: function () {
+            return this.totalSeats;
+        }
     },
     ticketPrice : {
         type : Number,

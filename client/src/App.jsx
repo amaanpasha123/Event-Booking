@@ -9,6 +9,7 @@ import UserDashboard from './pages/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentFailed from './pages/PaymentFailed';
+import OrganizerRegister from './pages/OrganizerRegister';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/organizer/register" element={<OrganizerRegister />} />
+            <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />

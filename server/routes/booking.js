@@ -8,6 +8,7 @@ router.post('/', protect, bookEvent);
 router.put('/:id/confirm', protect, admin, confirmBooking);//only admin
 router.get('/my', protect, getMyBooking);
 router.get('/all', protect, admin, getAllBookings);
-router.delete('/:id', protect, cancelBooking);//only admin 
+router.delete('/:id', protect, cancelBooking);//only admin
+router.get('/organizer', protect, organizer, getOrganizerBookings); 
 
 module.exports = router;

@@ -14,7 +14,7 @@ const protect = async (req, res, next) => {
             req.user = await User.findById(decoded.id).select('-password');
 
             if(!req.user){
-                return res.status(400).json({message : "No authorization is given over here"});
+                return res.status(401).json({message : "No authorization is given over here"});
             }
 
             next(); // move to next middleware
