@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     // ================= NORMAL USER REGISTER =================
     const register = async (name, email, password) => {
         try {
-            const { data } = await api.post("/auth/register", {
+            const { data } = await api.post("/auth/register-organizer", {
                 name,
                 email,
                 password,
