@@ -23,7 +23,7 @@ function App() {
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/organizer/register" element={<OrganizerRegister />} />
+            <Route path="/register-organizer" element={<OrganizerRegister />} />
             <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/admin" element={<AdminDashboard />} />
