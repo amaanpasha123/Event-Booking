@@ -132,7 +132,7 @@ const Home = () => {
                 <div className="h-scroll-hint">Scroll</div>
             </div>
 
-            {/* ── FEATURES ── */}
+            {/* ── FEATURES ──
             <div className="h-features-grid">
                 <FeatureCard
                     icon={<FaRegClock />}
@@ -149,7 +149,7 @@ const Home = () => {
                     title="Verified & Secure"
                     desc="Every transaction is protected by cutting-edge encryption and OTP verification."
                 />
-            </div>
+            </div> */}
 
             {/* ── EVENTS ── */}
             <div className="h-section-header">
