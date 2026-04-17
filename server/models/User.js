@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
         enum : ['user','organizer', 'admin'],
         default : 'user'
     },
+    company: {
+        type: String,
+        default: ''       // 👈 add this
+    },
     isVerified : {
         type : Boolean,
         default : false

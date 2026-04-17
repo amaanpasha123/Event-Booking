@@ -158,6 +158,62 @@ exports.registerUser = async (req, res) => {
     }
 };
 
+//================ Register-Organizer =============
+exports.registerOrganizer = async (req, res) => {
+    const { name, email, password, company } = req.body;
+
+    try {
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: "User already exists. Please login." });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const user = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            role: "organizer",   // always organizer
+            company: company || "",
+            isVerified: false
+        });
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        await OTP.create({
+            email,
+            otp,
+            action: "account_verification",
+            expiresAt: new Date(Date.now() + 5 * 60 * 1000)
+        });
+
+        const emailSent = await sendOtpEmail(email, otp, "account_verification");
+
+        if (!emailSent) {
+            await User.deleteOne({ email });
+            await OTP.deleteMany({ email, action: "account_verification" });
+            return res.status(500).json({ message: "Could not send OTP. Please try again." });
+        }
+
+        res.status(201).json({
+            message: "Organizer registered. Please verify OTP.",
+            email: user.email
+        });
+
+    } catch (error) {
+        console.error("Organizer Register Error:", error.message);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
 // ================= LOGIN =================
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
