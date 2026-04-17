@@ -1,31 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const {protect, admin} = require("../middlewares/auth");
-const {getEvents, getEventById, createEvent,updateEvent,deleteEvent, getMyEvents} = require("../controller/eventController");
+const { protect, admin } = require("../middlewares/auth");
 const authorize = require("../middlewares/role");
+const { getEvents, getEventById, createEvent, updateEvent, deleteEvent, getMyEvents } = require("../controller/eventController");
 
+router.get("/", getEvents);
+router.get("/my", protect, authorize("admin", "organizer"), getMyEvents); // 👈 BEFORE /:id
+router.get("/:id", getEventById);
 
-//geting home page of events...
-router.get("/",getEvents);
+router.post("/", protect, authorize("admin", "organizer"), createEvent);  // 👈 only one post route
 
-//GET event by ID
-router.get("/:id",getEventById);
-
-
-//organizer creates a event...
-router.post("/", protect, authorize("admin", "organizer"), createEvent);
-
-router.get("/my", protect, authorize("admin", "organizer"), getMyEvents);
-
-
-//Create Event Only Admin.....
-router.post("/",protect, admin, createEvent);
-
-//Update Event Only Admin....
-router.put("/:id", protect, admin, updateEvent);
-
-//Delete the Event only Admin...
-router.delete("/:id", protect, admin, deleteEvent);
+router.put("/:id", protect, authorize("admin", "organizer"), updateEvent);
+router.delete("/:id", protect, authorize("admin", "organizer"), deleteEvent);
 
 module.exports = router;
-
