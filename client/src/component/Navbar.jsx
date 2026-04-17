@@ -81,8 +81,8 @@ const Navbar = () => {
                             <>
                                 <div className="nav-divider" />
                                 <Link to="/login" className="nav-link">Login</Link>
-                                <Link to="/organizer/register" className="nav-pill nav-pill-ghost">
-                                    Become Organizer         // 👈 optional but good for SaaS
+                                <Link to="register-organizer" className="nav-pill nav-pill-ghost">
+                                    Become Organizer
                                 </Link>
                                 <Link to="/register" className="nav-pill nav-pill-primary">
                                     Sign Up →
