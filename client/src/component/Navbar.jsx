@@ -52,14 +52,25 @@ const Navbar = () => {
                         {user ? (
                             <>
                                 <Link
-                                    to={user.role === 'admin' ? '/admin' : '/dashboard'}
+                                    to={
+                                        user.role === 'admin' ? '/admin' :
+                                            user.role === 'organizer' ? '/organizer/dashboard' :  // 👈 add this
+                                                '/dashboard'
+                                    }
                                     className="nav-link"
                                 >
-                                    {user.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+                                    {user.role === 'admin' ? 'Admin Panel' :
+                                        user.role === 'organizer' ? 'Organizer Dashboard' :      // 👈 add this
+                                            'Dashboard'}
                                 </Link>
+
                                 {user.role === 'admin' && (
                                     <span className="nav-badge">Admin</span>
                                 )}
+                                {user.role === 'organizer' && (                               // 👈 add this
+                                    <span className="nav-badge">Organizer</span>
+                                )}
+
                                 <div className="nav-divider" />
                                 <div className="nav-avatar">{initials}</div>
                                 <button onClick={handleLogout} className="nav-pill nav-pill-ghost">
@@ -70,6 +81,9 @@ const Navbar = () => {
                             <>
                                 <div className="nav-divider" />
                                 <Link to="/login" className="nav-link">Login</Link>
+                                <Link to="/organizer/register" className="nav-pill nav-pill-ghost">
+                                    Become Organizer         // 👈 optional but good for SaaS
+                                </Link>
                                 <Link to="/register" className="nav-pill nav-pill-primary">
                                     Sign Up →
                                 </Link>
