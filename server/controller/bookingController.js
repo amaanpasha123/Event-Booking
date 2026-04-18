@@ -128,6 +128,12 @@ exports.confirmBooking = async (req, res) => {
             return res.status(400).json({ error: "Already confirmed" });
         }
 
+        if(req.user.role === "organizer" &&
+            booking.eventId.createdBy.toString() != req.user._id.toString()
+        ){
+            return res.status(403).json({error : "Not Authorized to confirm booking"});
+        }
+
         // 🔥 Atomic seat reduction at confirmation stage
         const event = await Event.findOneAndUpdate(
             {
