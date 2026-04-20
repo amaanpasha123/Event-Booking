@@ -97,14 +97,18 @@ const Home = () => {
     return (
         <div className="h-page">
 
-            {/* ── HERO ── */}
+            {/* ── HERO (full-width, no container) ── */}
             <div className="h-hero">
                 <div className="h-hero-bg" />
                 <div className="h-hero-overlay" />
-                <div className="h-hero-glow" />
+                <div className="h-hero-orb" />
+                <div className="h-hero-line" />
 
                 <div className="h-hero-content">
-                    <span className="h-hero-badge">Welcome to Eventora</span>
+                    <span className="h-hero-badge">
+                        <span className="h-hero-badge-dot" />
+                        Welcome to Eventora
+                    </span>
 
                     <h1 className="h-hero-title">
                         Find Your Next
@@ -126,67 +130,93 @@ const Home = () => {
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                         />
+                        <button className="h-search-btn">Search</button>
+                    </div>
+
+                    <div className="h-hero-stats">
+                        <div className="h-hero-stat">
+                            <span className="h-hero-stat-num">500+</span>
+                            <span className="h-hero-stat-label">Events</span>
+                        </div>
+                        <div className="h-hero-stat-divider" />
+                        <div className="h-hero-stat">
+                            <span className="h-hero-stat-num">50+</span>
+                            <span className="h-hero-stat-label">Cities</span>
+                        </div>
+                        <div className="h-hero-stat-divider" />
+                        <div className="h-hero-stat">
+                            <span className="h-hero-stat-num">10k+</span>
+                            <span className="h-hero-stat-label">Attendees</span>
+                        </div>
                     </div>
                 </div>
 
-                <div className="h-scroll-hint">Scroll</div>
+                <div className="h-scroll-hint">
+                    Scroll
+                    <div className="h-scroll-hint-bar" />
+                </div>
             </div>
 
-            {/* ── FEATURES ──
-            <div className="h-features-grid">
-                <FeatureCard
-                    icon={<FaRegClock />}
-                    title="Instant Booking"
-                    desc="Secure your tickets in seconds with our streamlined checkout — no friction, no delays."
-                />
-                <FeatureCard
-                    icon={<FaTicketAlt />}
-                    title="Seamless Access"
-                    desc="Download or manage your tickets anytime from your personal dashboard."
-                />
-                <FeatureCard
-                    icon={<FaShieldAlt />}
-                    title="Verified & Secure"
-                    desc="Every transaction is protected by cutting-edge encryption and OTP verification."
-                />
-            </div> */}
+            {/* ── ALL SECTIONS BELOW: wrapped in h-container ── */}
+            <div className="h-container">
 
-            {/* ── EVENTS ── */}
-            <div className="h-section-header">
-                <h2 className="h-section-title">Upcoming Events</h2>
-                <span className="h-section-count">{events.length} results found</span>
-            </div>
+                {/* ── FEATURES ── */}
+                <div className="h-features-grid">
+                    <FeatureCard
+                        icon={<FaRegClock />}
+                        title="Instant Booking"
+                        desc="Secure your tickets in seconds with our streamlined checkout — no friction, no delays."
+                    />
+                    <FeatureCard
+                        icon={<FaTicketAlt />}
+                        title="Seamless Access"
+                        desc="Download or manage your tickets anytime from your personal dashboard."
+                    />
+                    <FeatureCard
+                        icon={<FaShieldAlt />}
+                        title="Verified & Secure"
+                        desc="Every transaction is protected by cutting-edge encryption and OTP verification."
+                    />
+                </div>
 
-            {loading ? (
-                <div className="h-loading">
-                    <div className="h-spinner" />
-                    Curating events for you...
+                {/* ── EVENTS ── */}
+                <div className="h-section-header">
+                    <h2 className="h-section-title">Upcoming Events</h2>
+                    <span className="h-section-count">{events.length} results found</span>
                 </div>
-            ) : events.length === 0 ? (
-                <div className="h-empty">
-                    <div className="h-empty-icon">🎭</div>
-                    No events found matching your search.
-                </div>
-            ) : (
-                <div className="h-events-grid">
-                    {events.map(event => <EventCard key={event._id} event={event} />)}
-                </div>
-            )}
 
-            {/* ── FOOTER ── */}
-            <footer className="h-footer">
-                <div className="h-footer-brand">
-                    <FaTicketAlt style={{ fontSize: '20px', color: 'var(--gold)' }} />
-                    <span className="h-footer-brand-name">Eventora</span>
-                </div>
-                <p className="h-footer-desc">
-                    The most elegant way to discover and host world-class events.
-                    Let's make extraordinary memories together.
-                </p>
-                <div className="h-footer-copy">
-                    &copy; {new Date().getFullYear()} Eventora Platform · All rights reserved
-                </div>
-            </footer>
+                {loading ? (
+                    <div className="h-loading">
+                        <div className="h-spinner" />
+                        Curating events for you...
+                    </div>
+                ) : events.length === 0 ? (
+                    <div className="h-empty">
+                        <div className="h-empty-icon">🎭</div>
+                        No events found matching your search.
+                    </div>
+                ) : (
+                    <div className="h-events-grid">
+                        {events.map(event => <EventCard key={event._id} event={event} />)}
+                    </div>
+                )}
+
+                {/* ── FOOTER ── */}
+                <footer className="h-footer">
+                    <div className="h-footer-brand">
+                        <FaTicketAlt style={{ fontSize: '18px', color: 'var(--purple-muted)' }} />
+                        <span className="h-footer-brand-name">Eventora</span>
+                    </div>
+                    <p className="h-footer-desc">
+                        The most elegant way to discover and host world-class events.
+                        Let's make extraordinary memories together.
+                    </p>
+                    <div className="h-footer-copy">
+                        &copy; {new Date().getFullYear()} Eventora Platform · All rights reserved
+                    </div>
+                </footer>
+
+            </div>{/* end h-container */}
 
         </div>
     );
