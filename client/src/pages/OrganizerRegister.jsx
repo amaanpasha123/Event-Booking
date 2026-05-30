@@ -156,7 +156,6 @@ const s = {
         textDecoration: "none"
     },
 
-    // ====== NEW: Waiting screen styles ======
     waitingBody: {
         padding: "40px 34px",
         textAlign: "center"
@@ -244,7 +243,9 @@ const s = {
 
 const OrganizerRegister = () => {
     const navigate = useNavigate();
-    const { register, verifyOTP } = useContext(AuthContext);
+
+    // ✅ FIX 1: registerOrganizer instead of register
+    const { registerOrganizer, verifyOTP } = useContext(AuthContext);
 
     const [name, setName] = useState("");
     const [company, setCompany] = useState("");
@@ -253,7 +254,7 @@ const OrganizerRegister = () => {
     const [otp, setOtp] = useState("");
 
     const [showOTP, setShowOTP] = useState(false);
-    const [showWaiting, setShowWaiting] = useState(false); // 👈 NEW
+    const [showWaiting, setShowWaiting] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -264,11 +265,17 @@ const OrganizerRegister = () => {
 
         try {
             if (!showOTP) {
-                await register(name, email, password, "organizer", company);
+                // ✅ FIX 2: call registerOrganizer with correct params
+                await registerOrganizer(name, email, password, company);
                 setShowOTP(true);
             } else {
                 await verifyOTP(email, otp);
-                setShowWaiting(true); // 👈 show waiting screen instead of navigating
+
+                // ✅ FIX 3: clear auto-login since organizer is still pending
+                localStorage.removeItem("userInfo");
+                localStorage.removeItem("token");
+
+                setShowWaiting(true);
             }
         } catch (err) {
             setError(err.message || "Something went wrong");
@@ -277,12 +284,11 @@ const OrganizerRegister = () => {
         }
     };
 
-    // ====== NEW: Waiting for approval screen ======
+    // Waiting for approval screen
     if (showWaiting) {
         return (
             <div style={s.page}>
                 <div style={s.card}>
-                    {/* TOP */}
                     <div style={s.top}>
                         <div style={s.logoRow}>
                             <div style={s.logoIcon}>
@@ -296,10 +302,7 @@ const OrganizerRegister = () => {
                         <div style={s.sub}>Your organizer account is under review</div>
                     </div>
 
-                    {/* WAITING BODY */}
                     <div style={s.waitingBody}>
-
-                        {/* Clock icon */}
                         <div style={s.waitingIconWrap}>
                             <FaClock />
                         </div>
@@ -309,7 +312,6 @@ const OrganizerRegister = () => {
                             Your account has been verified successfully. Our admin team will review your organizer request and get back to you soon.
                         </div>
 
-                        {/* Steps */}
                         <div style={s.waitingSteps}>
                             <div style={{ ...s.waitingStepItem, marginBottom: '14px' }}>
                                 <div style={s.waitingStepDot('#22c55e')} />
@@ -334,7 +336,6 @@ const OrganizerRegister = () => {
                             </div>
                         </div>
 
-                        {/* Go to login */}
                         <button
                             style={s.loginBtn}
                             onClick={() => navigate('/login')}
@@ -347,11 +348,10 @@ const OrganizerRegister = () => {
         );
     }
 
-    // ====== Original form ======
+    // Original registration form
     return (
         <div style={s.page}>
             <div style={s.card}>
-                {/* TOP */}
                 <div style={s.top}>
                     <div style={s.logoRow}>
                         <div style={s.logoIcon}>
@@ -373,7 +373,6 @@ const OrganizerRegister = () => {
                     </div>
                 </div>
 
-                {/* BODY */}
                 <div style={s.body}>
                     {error && <div style={s.error}>{error}</div>}
 
