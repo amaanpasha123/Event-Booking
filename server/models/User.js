@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema({
     isVerified : {
         type : Boolean,
         default : false
+    },
+    organizerStatus: {
+        type: String,
+        enum: ['none', 'pending', 'approved', 'rejected'],
+        default: 'none'
     }
 }, { timestamps: true });
 

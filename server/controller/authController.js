@@ -179,9 +179,10 @@ exports.registerOrganizer = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role: "organizer",   // always organizer
+            role: "user",                  // 👈 NOT organizer yet
             company: company || "",
-            isVerified: false
+            isVerified: false,
+            organizerStatus: "pending"     // 👈 waiting for admin approval
         });
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -202,7 +203,7 @@ exports.registerOrganizer = async (req, res) => {
         }
 
         res.status(201).json({
-            message: "Organizer registered. Please verify OTP.",
+            message: "Organizer request submitted. Verify OTP and wait for admin approval.",
             email: user.email
         });
 
@@ -233,6 +234,20 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials" });
         }
 
+        // 👇 Block pending organizer requests
+        if (user.organizerStatus === "pending") {
+            return res.status(403).json({
+                error: "Your organizer request is under review. Please wait for admin approval."
+            });
+        }
+
+        // 👇 Block rejected organizer requests
+        if (user.organizerStatus === "rejected") {
+            return res.status(403).json({
+                error: "Your organizer request was rejected. Please contact support."
+            });
+        }
+
         if (!user.isVerified && user.role === "user") {
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -244,7 +259,6 @@ exports.loginUser = async (req, res) => {
                 expiresAt: new Date(Date.now() + 5 * 60 * 1000)
             });
 
-            // ✅ Handle email failure in login too
             const emailSent = await sendOtpEmail(email, otp, "account_verification");
 
             if (!emailSent) {
