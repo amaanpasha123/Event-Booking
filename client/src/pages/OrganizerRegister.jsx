@@ -7,23 +7,9 @@ import {
     FaLock,
     FaUser,
     FaBuilding,
-    FaCheckCircle
+    FaCheckCircle,
+    FaClock
 } from "react-icons/fa";
-
-/*
-=====================================================
-ORGANIZER REGISTER PAGE
-✅ Uses SAME backend register route
-POST /api/auth/register
-
-Only difference:
-register(name, email, password, role)
-
-role = "organizer"
-
-Backend must accept role field.
-=====================================================
-*/
 
 const s = {
     page: {
@@ -168,18 +154,96 @@ const s = {
         color: "#7c6af7",
         fontWeight: "700",
         textDecoration: "none"
+    },
+
+    // ====== NEW: Waiting screen styles ======
+    waitingBody: {
+        padding: "40px 34px",
+        textAlign: "center"
+    },
+
+    waitingIconWrap: {
+        width: "80px",
+        height: "80px",
+        borderRadius: "50%",
+        background: "#fffbeb",
+        border: "2px solid #fde68a",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "0 auto 24px auto",
+        fontSize: "32px",
+        color: "#d97706"
+    },
+
+    waitingTitle: {
+        fontSize: "20px",
+        fontWeight: "800",
+        color: "#111",
+        marginBottom: "12px"
+    },
+
+    waitingDesc: {
+        fontSize: "14px",
+        color: "#6b7280",
+        lineHeight: "1.7",
+        marginBottom: "28px"
+    },
+
+    waitingSteps: {
+        background: "#f9fafb",
+        borderRadius: "14px",
+        padding: "20px",
+        border: "1px solid #f0f0f0",
+        marginBottom: "24px",
+        textAlign: "left"
+    },
+
+    waitingStepItem: {
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "12px",
+        marginBottom: "14px"
+    },
+
+    waitingStepDot: (color) => ({
+        width: "8px",
+        height: "8px",
+        borderRadius: "50%",
+        background: color,
+        marginTop: "5px",
+        flexShrink: 0
+    }),
+
+    waitingStepText: {
+        fontSize: "13px",
+        color: "#374151",
+        lineHeight: "1.5"
+    },
+
+    waitingStepLabel: {
+        fontWeight: "700",
+        color: "#111",
+        display: "block",
+        marginBottom: "2px"
+    },
+
+    loginBtn: {
+        width: "100%",
+        border: "1.5px solid #e5e7eb",
+        padding: "13px",
+        borderRadius: "12px",
+        background: "#fff",
+        color: "#374151",
+        fontWeight: "700",
+        fontSize: "14px",
+        cursor: "pointer",
+        fontFamily: "'DM Sans', sans-serif"
     }
 };
 
 const OrganizerRegister = () => {
     const navigate = useNavigate();
-
-    /*
-    AuthContext should already contain:
-    register(name,email,password,role)
-    verifyOTP(email,otp)
-    */
-
     const { register, verifyOTP } = useContext(AuthContext);
 
     const [name, setName] = useState("");
@@ -189,6 +253,7 @@ const OrganizerRegister = () => {
     const [otp, setOtp] = useState("");
 
     const [showOTP, setShowOTP] = useState(false);
+    const [showWaiting, setShowWaiting] = useState(false); // 👈 NEW
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -199,18 +264,11 @@ const OrganizerRegister = () => {
 
         try {
             if (!showOTP) {
-                /*
-                SAME backend route used.
-                role sent as organizer
-                */
                 await register(name, email, password, "organizer", company);
-
                 setShowOTP(true);
             } else {
                 await verifyOTP(email, otp);
-
-                // organizer goes to organizer dashboard
-                navigate("/organizer/dashboard");
+                setShowWaiting(true); // 👈 show waiting screen instead of navigating
             }
         } catch (err) {
             setError(err.message || "Something went wrong");
@@ -219,6 +277,77 @@ const OrganizerRegister = () => {
         }
     };
 
+    // ====== NEW: Waiting for approval screen ======
+    if (showWaiting) {
+        return (
+            <div style={s.page}>
+                <div style={s.card}>
+                    {/* TOP */}
+                    <div style={s.top}>
+                        <div style={s.logoRow}>
+                            <div style={s.logoIcon}>
+                                <FaTicketAlt />
+                            </div>
+                            <span style={{ color: "#fff", fontWeight: "800" }}>
+                                Eventora
+                            </span>
+                        </div>
+                        <div style={s.title}>Request Submitted!</div>
+                        <div style={s.sub}>Your organizer account is under review</div>
+                    </div>
+
+                    {/* WAITING BODY */}
+                    <div style={s.waitingBody}>
+
+                        {/* Clock icon */}
+                        <div style={s.waitingIconWrap}>
+                            <FaClock />
+                        </div>
+
+                        <div style={s.waitingTitle}>Waiting for Admin Approval</div>
+                        <div style={s.waitingDesc}>
+                            Your account has been verified successfully. Our admin team will review your organizer request and get back to you soon.
+                        </div>
+
+                        {/* Steps */}
+                        <div style={s.waitingSteps}>
+                            <div style={{ ...s.waitingStepItem, marginBottom: '14px' }}>
+                                <div style={s.waitingStepDot('#22c55e')} />
+                                <div style={s.waitingStepText}>
+                                    <span style={s.waitingStepLabel}>✓ Account Created</span>
+                                    Your details have been saved successfully
+                                </div>
+                            </div>
+                            <div style={{ ...s.waitingStepItem, marginBottom: '14px' }}>
+                                <div style={s.waitingStepDot('#22c55e')} />
+                                <div style={s.waitingStepText}>
+                                    <span style={s.waitingStepLabel}>✓ Email Verified</span>
+                                    Your email {email} is confirmed
+                                </div>
+                            </div>
+                            <div style={{ ...s.waitingStepItem, marginBottom: 0 }}>
+                                <div style={s.waitingStepDot('#f59e0b')} />
+                                <div style={s.waitingStepText}>
+                                    <span style={s.waitingStepLabel}>⏳ Admin Approval Pending</span>
+                                    You will be able to login once approved
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Go to login */}
+                        <button
+                            style={s.loginBtn}
+                            onClick={() => navigate('/login')}
+                        >
+                            Go to Login →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // ====== Original form ======
     return (
         <div style={s.page}>
             <div style={s.card}>
@@ -267,27 +396,21 @@ const OrganizerRegister = () => {
                                             type="text"
                                             required
                                             value={name}
-                                            onChange={(e) =>
-                                                setName(e.target.value)
-                                            }
+                                            onChange={(e) => setName(e.target.value)}
                                             placeholder="Your full name"
                                         />
                                     </div>
                                 </div>
 
                                 <div style={s.fieldWrap}>
-                                    <label style={s.label}>
-                                        Company / Brand
-                                    </label>
+                                    <label style={s.label}>Company / Brand</label>
                                     <div style={s.inputWrap}>
                                         <FaBuilding style={s.icon} />
                                         <input
                                             style={s.input}
                                             type="text"
                                             value={company}
-                                            onChange={(e) =>
-                                                setCompany(e.target.value)
-                                            }
+                                            onChange={(e) => setCompany(e.target.value)}
                                             placeholder="Optional"
                                         />
                                     </div>
@@ -302,9 +425,7 @@ const OrganizerRegister = () => {
                                             type="email"
                                             required
                                             value={email}
-                                            onChange={(e) =>
-                                                setEmail(e.target.value)
-                                            }
+                                            onChange={(e) => setEmail(e.target.value)}
                                             placeholder="you@example.com"
                                         />
                                     </div>
@@ -319,9 +440,7 @@ const OrganizerRegister = () => {
                                             type="password"
                                             required
                                             value={password}
-                                            onChange={(e) =>
-                                                setPassword(e.target.value)
-                                            }
+                                            onChange={(e) => setPassword(e.target.value)}
                                             placeholder="Create password"
                                         />
                                     </div>
@@ -343,11 +462,7 @@ const OrganizerRegister = () => {
                                     maxLength="6"
                                     required
                                     value={otp}
-                                    onChange={(e) =>
-                                        setOtp(
-                                            e.target.value.replace(/\D/g, "")
-                                        )
-                                    }
+                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                                     placeholder="000000"
                                 />
                             </div>
