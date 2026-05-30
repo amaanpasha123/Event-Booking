@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../utils/axios';
 import { useNavigate } from 'react-router-dom';
+import './AdminDashboard.css'; // 👈 import the new CSS
 
 const s = {
     page: { maxWidth: '1280px', margin: '0 auto', fontFamily: "'DM Sans', 'Segoe UI', sans-serif", padding: '0 16px' },
@@ -161,11 +162,56 @@ const BookingItem = ({ booking, onConfirm, onCancel }) => {
     );
 };
 
+// ========== NEW: Organizer Request Item ==========
+const OrganizerItem = ({ organizer, onApprove, onReject }) => {
+    return (
+        <li className="organizer-item">
+            <div className="organizer-item-top">
+                <div className="organizer-item-name">{organizer.name}</div>
+                <span className="organizer-pending-badge">Pending</span>
+            </div>
+            <div className="organizer-info-box">
+                <div className="organizer-info-row">
+                    <span className="organizer-info-label">Email</span>
+                    <span className="organizer-info-value">{organizer.email}</span>
+                </div>
+                {organizer.company && (
+                    <div className="organizer-info-row">
+                        <span className="organizer-info-label">Company</span>
+                        <span className="organizer-info-value">{organizer.company}</span>
+                    </div>
+                )}
+                <div className="organizer-info-row">
+                    <span className="organizer-info-label">Applied</span>
+                    <span className="organizer-info-sub">
+                        {new Date(organizer.createdAt).toLocaleString()}
+                    </span>
+                </div>
+            </div>
+            <div className="organizer-actions-row">
+                <button
+                    className="organizer-approve-btn"
+                    onClick={() => onApprove(organizer._id)}
+                >
+                    ✓ Approve
+                </button>
+                <button
+                    className="organizer-reject-btn"
+                    onClick={() => onReject(organizer._id)}
+                >
+                    ✕ Reject
+                </button>
+            </div>
+        </li>
+    );
+};
+
 const AdminDashboard = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
     const [bookings, setBookings] = useState([]);
+    const [pendingOrganizers, setPendingOrganizers] = useState([]); // 👈 NEW
     const [loading, setLoading] = useState(true);
     const [showEventForm, setShowEventForm] = useState(false);
     const [createBtnHover, setCreateBtnHover] = useState(false);
@@ -180,12 +226,14 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
         try {
-            const [eventsRes, bookingsRes] = await Promise.all([
+            const [eventsRes, bookingsRes, organizersRes] = await Promise.all([
                 api.get('/events'),
-                api.get('/booking/all')  // ✅ was '/booking/my'
+                api.get('/booking/all'),
+                api.get('/admin/pending-organizers')  // 👈 NEW
             ]);
             setEvents(eventsRes.data);
             setBookings(bookingsRes.data);
+            setPendingOrganizers(organizersRes.data); // 👈 NEW
         } catch (error) {
             console.error('Error fetching admin data', error);
         } finally {
@@ -221,6 +269,29 @@ const AdminDashboard = () => {
         if (window.confirm('Reject this booking?')) {
             try { await api.delete(`/booking/${id}`); fetchData(); }
             catch { alert('Error cancelling booking'); }
+        }
+    };
+
+    // ========== NEW: Approve/Reject organizer handlers ==========
+    const handleApproveOrganizer = async (userId) => {
+        if (window.confirm('Approve this organizer?')) {
+            try {
+                await api.patch(`/admin/approve-organizer/${userId}`);
+                fetchData(); // refresh all data including pending list
+            } catch (error) {
+                alert(error.response?.data?.message || 'Error approving organizer');
+            }
+        }
+    };
+
+    const handleRejectOrganizer = async (userId) => {
+        if (window.confirm('Reject this organizer request?')) {
+            try {
+                await api.patch(`/admin/reject-organizer/${userId}`);
+                fetchData();
+            } catch (error) {
+                alert(error.response?.data?.message || 'Error rejecting organizer');
+            }
         }
     };
 
@@ -266,10 +337,19 @@ const AdminDashboard = () => {
                 </div>
                 <div style={s.statCard}>
                     <div>
-                        <div style={s.statLabel}>Pending Requests</div>
+                        <div style={s.statLabel}>Pending Bookings</div>
                         <div style={s.statValue('#d97706')}>{pendingCount}</div>
                     </div>
                     <div style={s.statIcon('#fffbeb', '#d97706')}>⏳</div>
+                </div>
+
+                {/* 👇 NEW stat card for organizer requests */}
+                <div style={s.statCard}>
+                    <div>
+                        <div style={s.statLabel}>Organizer Requests</div>
+                        <div style={s.statValue('#7c3aed')}>{pendingOrganizers.length}</div>
+                    </div>
+                    <div className="organizer-stat-icon">🏢</div>
                 </div>
             </div>
 
@@ -346,10 +426,34 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* 👇 NEW: Organizer Requests Section */}
+            <div className="organizer-section">
+                <div className="organizer-section-title">
+                    <span className="organizer-section-badge">{pendingOrganizers.length}</span>
+                    Organizer Requests
+                </div>
+                <div className="organizer-list-card">
+                    <div className="organizer-list-scroll">
+                        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                            {pendingOrganizers.length === 0
+                                ? <li className="organizer-empty">No pending organizer requests.</li>
+                                : pendingOrganizers.map(organizer => (
+                                    <OrganizerItem
+                                        key={organizer._id}
+                                        organizer={organizer}
+                                        onApprove={handleApproveOrganizer}
+                                        onReject={handleRejectOrganizer}
+                                    />
+                                ))
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
     );
 };
 
 export default AdminDashboard;
-
-

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const eventRoutes = require("./routes/events");
 const bookingRoutes = require("./routes/booking");
+const adminRoutes = require("./routes/adminRoutes");
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/booking', bookingRoutes);
+app.use('/api/admin', adminRoutes);
 
 // ✅ MongoDB Connection (:contentReference[oaicite:0]{index=0})
 mongoose.connect(process.env.MONGODB_URI, { dbName: 'eventora' })
