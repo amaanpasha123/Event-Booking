@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     // ================= LOAD USER FROM LOCAL STORAGE =================
+    // On app startup, restore user session from localStorage if it exists
     useEffect(() => {
         const userInfo = localStorage.getItem("userInfo");
 
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     // ================= LOGIN =================
+    // Authenticates user (any role) and stores token + user info in localStorage
     const login = async (email, password) => {
         try {
             const { data } = await api.post("/auth/login", {
@@ -26,13 +28,9 @@ export const AuthProvider = ({ children }) => {
                 password
             });
 
+            // Save user object (includes role) to state and localStorage
             setUser(data.user);
-
-            localStorage.setItem(
-                "userInfo",
-                JSON.stringify(data.user)
-            );
-
+            localStorage.setItem("userInfo", JSON.stringify(data.user));
             localStorage.setItem("token", data.token);
 
             return data;
@@ -47,13 +45,14 @@ export const AuthProvider = ({ children }) => {
     };
 
     // ================= NORMAL USER REGISTER =================
+    // Registers a normal user — hits /auth/register which hardcodes role: "user" in DB
+    // ✅ FIXED: was incorrectly calling /auth/register-organizer before
     const register = async (name, email, password) => {
         try {
-            const { data } = await api.post("/auth/register-organizer", {
+            const { data } = await api.post("/auth/register", {  // ✅ correct endpoint
                 name,
                 email,
-                password,
-                role: "user"
+                password
             });
 
             return data;
@@ -68,6 +67,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     // ================= ORGANIZER REGISTER =================
+    // Registers an organizer — hits /auth/register-organizer which hardcodes role: "organizer" in DB
+    // ✅ FIXED: was incorrectly calling /auth/register before
     const registerOrganizer = async (
         name,
         email,
@@ -75,12 +76,11 @@ export const AuthProvider = ({ children }) => {
         company = ""
     ) => {
         try {
-            const { data } = await api.post("/auth/register", {
+            const { data } = await api.post("/auth/register-organizer", {  // ✅ correct endpoint
                 name,
                 email,
                 password,
-                company,
-                role: "organizer"
+                company
             });
 
             return data;
@@ -95,6 +95,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     // ================= VERIFY OTP =================
+    // Verifies the OTP sent to email after registration
+    // On success, stores the verified user (with correct role) in state and localStorage
     const verifyOTP = async (email, otp) => {
         try {
             const { data } = await api.post("/auth/verify", {
@@ -102,13 +104,9 @@ export const AuthProvider = ({ children }) => {
                 otp
             });
 
+            // Save verified user object (includes role) to state and localStorage
             setUser(data.user);
-
-            localStorage.setItem(
-                "userInfo",
-                JSON.stringify(data.user)
-            );
-
+            localStorage.setItem("userInfo", JSON.stringify(data.user));
             localStorage.setItem("token", data.token);
 
             return data;
@@ -123,9 +121,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     // ================= LOGOUT =================
+    // Clears user session from state and localStorage
     const logout = () => {
         setUser(null);
-
         localStorage.removeItem("userInfo");
         localStorage.removeItem("token");
     };
@@ -142,6 +140,7 @@ export const AuthProvider = ({ children }) => {
                 logout
             }}
         >
+            {/* Don't render children until auth state is restored from localStorage */}
             {!loading && children}
         </AuthContext.Provider>
     );
