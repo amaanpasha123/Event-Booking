@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../utils/axios';
 import { useNavigate } from 'react-router-dom';
-import './AdminDashboard.css'; // 👈 import the new CSS
+import '../styles/AdminDashboard.css'; // 👈 import the new CSS
 
 const s = {
     page: { maxWidth: '1280px', margin: '0 auto', fontFamily: "'DM Sans', 'Segoe UI', sans-serif", padding: '0 16px' },
