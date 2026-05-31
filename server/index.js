@@ -41,6 +41,8 @@ app.use('/api/events', eventRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use("/api/payment", paymentRoutes);
+
+
 // ✅ MongoDB Connection (:contentReference[oaicite:0]{index=0})
 mongoose.connect(process.env.MONGODB_URI, { dbName: 'eventora' })
 .then(() => {
