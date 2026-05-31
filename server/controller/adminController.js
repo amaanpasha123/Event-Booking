@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const {sendOrganizerApprovalEmail} = require("../utils/email");
+
 
 // GET all pending organizer requests
 exports.getPendingOrganizers = async (req, res) => {
@@ -30,6 +32,8 @@ exports.approveOrganizer = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
+
+        await sendOrganizerApprovalEmail(user.email, user.name);
 
         res.status(200).json({
             message: `${user.name} has been approved as an organizer.`,

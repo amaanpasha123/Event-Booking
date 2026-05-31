@@ -75,3 +75,40 @@ exports.sendBookingEmail = async (userEmail, userName, eventTitle) => {
 
     return await sendEmail({ to: userEmail, subject, html });
 };
+
+// ================= ORGANIZER APPROVAL EMAIL =================
+exports.sendOrganizerApprovalEmail = async (email, name) => {
+    const subject = `🎉 Congratulations! You're approved as an Organizer on Eventora`;
+
+    const html = `
+        <div style="font-family: Arial; padding: 20px; background:#f4f4f4;">
+            <div style="max-width:500px;margin:auto;background:#fff;padding:20px;border-radius:10px;">
+                
+                <h2 style="color:#2c3e50;">Hello ${name} 👋</h2>
+
+                <p style="font-size:16px;">
+                    Great news! Your organizer request has been <strong style="color:#16a34a;">approved</strong> by the Eventora admin team. 🎉
+                </p>
+
+                <p style="color:#555;">
+                    You can now login to your account and start creating events on Eventora.
+                </p>
+
+                <div style="text-align:center;margin:30px 0;">
+                    <a href="https://amaanbook.shop/login" 
+                       style="background:#0a0a0f;color:#fff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:bold;font-size:15px;">
+                        Login Now →
+                    </a>
+                </div>
+
+                <hr/>
+
+                <p style="font-size:12px;color:gray;">
+                    If you have any questions, feel free to contact us at support@amaanbook.shop
+                </p>
+            </div>
+        </div>
+    `;
+
+    return await sendEmail({ to: email, subject, html });
+};
