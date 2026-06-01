@@ -161,23 +161,7 @@ const Home = () => {
             <div className="h-container">
 
                 {/* ── FEATURES ── */}
-                <div className="h-features-grid">
-                    <FeatureCard
-                        icon={<FaRegClock />}
-                        title="Instant Booking"
-                        desc="Secure your tickets in seconds with our streamlined checkout — no friction, no delays."
-                    />
-                    <FeatureCard
-                        icon={<FaTicketAlt />}
-                        title="Seamless Access"
-                        desc="Download or manage your tickets anytime from your personal dashboard."
-                    />
-                    <FeatureCard
-                        icon={<FaShieldAlt />}
-                        title="Verified & Secure"
-                        desc="Every transaction is protected by cutting-edge encryption and OTP verification."
-                    />
-                </div>
+
 
                 {/* ── EVENTS ── */}
                 <div className="h-section-header">
