@@ -160,23 +160,7 @@ const Home = () => {
             <div className="h-container">
 
                 {/* ── FEATURES VALUE PROP GRID ── */}
-                <div className="h-features-grid">
-                    <FeatureCard
-                        icon={<FaBolt />}
-                        title="Instant Booking"
-                        desc="Get your e-tickets generated instantly upon checkout securely."
-                    />
-                    <FeatureCard
-                        icon={<FaShieldAlt />}
-                        title="Verified Organizers"
-                        desc="All event configurations undergo verification for absolute reliability."
-                    />
-                    <FeatureCard
-                        icon={<FaRegClock />}
-                        title="Real-time Updates"
-                        desc="Get structural adjustments and seat availability changes dynamically."
-                    />
-                </div>
+
 
                 {/* ── EVENTS LISTING ── */}
                 <div className="h-section-header">
