@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/axios';
-import { FaCalendarAlt, FaMapMarkerAlt, FaSearch, FaRegClock, FaTicketAlt, FaShieldAlt } from 'react-icons/fa';
+import {
+    FaCalendarAlt, FaMapMarkerAlt, FaSearch,
+    FaTicketAlt, FaShieldAlt, FaRegClock, FaBolt
+} from 'react-icons/fa';
 import '../styles/Home.css';
 
 /* ── FEATURE CARD ── */
@@ -21,6 +24,7 @@ const EventCard = ({ event }) => {
         ? Math.round((event.availableSeats / event.totalSeats) * 100)
         : 0;
 
+    // Fixed logic: high percentage remaining means high availability
     const fillClass = pct >= 50 ? 'high' : pct >= 20 ? 'medium' : 'low';
     const isFree = !event.ticketPrice || event.ticketPrice === 0;
 
@@ -97,12 +101,9 @@ const Home = () => {
     return (
         <div className="h-page">
 
-            {/* ── HERO (full-width, no container) ── */}
+            {/* ── HERO (full-width) ── */}
             <div className="h-hero">
-                <div className="h-hero-bg" />
-                <div className="h-hero-overlay" />
                 <div className="h-hero-orb" />
-                <div className="h-hero-line" />
 
                 <div className="h-hero-content">
                     <span className="h-hero-badge">
@@ -111,9 +112,7 @@ const Home = () => {
                     </span>
 
                     <h1 className="h-hero-title">
-                        Find Your Next
-                        <span className="h-hero-title-accent">Unforgettable</span>
-                        Experience
+                        Find Your Next <span className="h-hero-title-accent">Unforgettable</span> Experience
                     </h1>
 
                     <p className="h-hero-subtitle">
@@ -130,7 +129,7 @@ const Home = () => {
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                         />
-                        <button className="h-search-btn">Search</button>
+                        <button className="h-search-btn" onClick={fetchEvents}>Search</button>
                     </div>
 
                     <div className="h-hero-stats">
@@ -157,13 +156,29 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* ── ALL SECTIONS BELOW: wrapped in h-container ── */}
+            {/* ── MAIN CONTENT CONTAINER ── */}
             <div className="h-container">
 
-                {/* ── FEATURES ── */}
+                {/* ── FEATURES VALUE PROP GRID ── */}
+                <div className="h-features-grid">
+                    <FeatureCard
+                        icon={<FaBolt />}
+                        title="Instant Booking"
+                        desc="Get your e-tickets generated instantly upon checkout securely."
+                    />
+                    <FeatureCard
+                        icon={<FaShieldAlt />}
+                        title="Verified Organizers"
+                        desc="All event configurations undergo verification for absolute reliability."
+                    />
+                    <FeatureCard
+                        icon={<FaRegClock />}
+                        title="Real-time Updates"
+                        desc="Get structural adjustments and seat availability changes dynamically."
+                    />
+                </div>
 
-
-                {/* ── EVENTS ── */}
+                {/* ── EVENTS LISTING ── */}
                 <div className="h-section-header">
                     <h2 className="h-section-title">Upcoming Events</h2>
                     <span className="h-section-count">{events.length} results found</span>
@@ -172,12 +187,12 @@ const Home = () => {
                 {loading ? (
                     <div className="h-loading">
                         <div className="h-spinner" />
-                        Curating events for you...
+                        <p>Curating events for you...</p>
                     </div>
                 ) : events.length === 0 ? (
                     <div className="h-empty">
                         <div className="h-empty-icon">🎭</div>
-                        No events found matching your search.
+                        <p>No events found matching your search.</p>
                     </div>
                 ) : (
                     <div className="h-events-grid">
@@ -188,7 +203,7 @@ const Home = () => {
                 {/* ── FOOTER ── */}
                 <footer className="h-footer">
                     <div className="h-footer-brand">
-                        <FaTicketAlt style={{ fontSize: '18px', color: 'var(--purple-muted)' }} />
+                        <FaTicketAlt style={{ fontSize: '20px', color: 'var(--primary)' }} />
                         <span className="h-footer-brand-name">Eventora</span>
                     </div>
                     <p className="h-footer-desc">
@@ -201,7 +216,6 @@ const Home = () => {
                 </footer>
 
             </div>{/* end h-container */}
-
         </div>
     );
 };
