@@ -12,9 +12,7 @@ const generateOtp = () => {
 exports.sendOtpEmail = async (req, res) => {
     try {
         const otp = generateOtp();
-
         await OTP.deleteMany({ email: req.user.email, action: "event_booking" });
-
         await OTP.create({
             email: req.user.email,
             otp,

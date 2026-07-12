@@ -52,6 +52,9 @@ exports.verifyPayment = async (req, res) => {
             paymentId: razorpay_payment_id
         });
 
+
+        
+
     } catch (error) {
         console.error("Verify Payment Error:", error.message);
         res.status(500).json({ error: error.message });
