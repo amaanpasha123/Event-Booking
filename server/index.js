@@ -20,7 +20,7 @@ app.use(cors({
         const allowedOrigins = [
             "https://amaanbook.shop",
             "https://www.amaanbook.shop",
-            "https://event-booking-jpgt310ml-amaanpasha23-9913s-projects.vercel.app"
+            "https://event-booking-crp4.onrender.com"
         ];
 
         if (!origin || allowedOrigins.includes(origin)) {
