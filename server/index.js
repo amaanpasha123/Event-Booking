@@ -8,51 +8,50 @@ const bookingRoutes = require("./routes/booking");
 const adminRoutes = require("./routes/adminRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 
-
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ✅ Middlewares
-app.use(cors({
+app.use(
+  cors({
     origin: function (origin, callback) {
-        const allowedOrigins = [
-            "https://amaanbook.shop",
-            "https://www.amaanbook.shop",
-            "https://event-booking-crp4.onrender.com"
-        ];
+      const allowedOrigins = [
+        "https://amaanbook.shop",
+        "https://www.amaanbook.shop",
+        "https://event-booking-lime-phi.vercel.app",
+      ];
 
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
     },
-    credentials: true
-}));
-
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
 // ✅ Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/booking', bookingRoutes);
-app.use('/api/admin', adminRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/booking", bookingRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/payment", paymentRoutes);
 
-
 // ✅ MongoDB Connection (:contentReference[oaicite:0]{index=0})
-mongoose.connect(process.env.MONGODB_URI, { dbName: 'eventora' })
-.then(() => {
+mongoose
+  .connect(process.env.MONGODB_URI, { dbName: "eventora" })
+  .then(() => {
     console.log("Connected to MongoDB");
-})
-.catch((error) => {
+  })
+  .catch((error) => {
     console.error("MongoDB connection error:", error);
-});
+  });
 // ✅ Server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
-
