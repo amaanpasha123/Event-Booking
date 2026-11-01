@@ -13,6 +13,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+console.log("RAZORPAY ENV CHECK:", {
+    keyIdLoaded: !!process.env.RAZORPAY_KEY_ID,
+    secretLoaded: !!process.env.RAZORPAY_KEY_SECRET,
+    keyMode: process.env.RAZORPAY_KEY_ID?.startsWith("rzp_live_")
+        ? "LIVE"
+        : process.env.RAZORPAY_KEY_ID?.startsWith("rzp_test_")
+        ? "TEST"
+        : "UNKNOWN"
+});
+
 // ✅ Middlewares
 app.use(
   cors({
